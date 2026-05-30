@@ -1,8 +1,8 @@
 // ==========================================================
 // 1. إعدادات الربط بالسيرفر و Google Sign-In Identity
 // ==========================================================
-const SUPABASE_URL = 'https://iexxsjynvczokyvatfxq.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impqcmljdmhoa2d2cWJrZ2Jud3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTcyNjcsImV4cCI6MjA5NTQ3MzI2N30.W-lSd89t6LHnlpUBhlM8Lkm80Rycq6THgWBUkdLBfcY'; 
+const SUPABASE_URL = 'https://iexxsjynvczokyvatfxq.supabase.co'; 
+const SUPABASE_KEY = 'sb_publishable_Uvs4hZnBQ2gn-zKjids5LQ_urKwYwBW'; 
 /// الـ Client ID الجديد والثابت بتاعك
 const GOOGLE_CLIENT_ID = '715210407785-3brf62jg5rsd30fegc4ocugieln0vpqk.apps.googleusercontent.com';
 

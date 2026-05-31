@@ -1,7 +1,7 @@
 // ==========================================================
 // 1. إعدادات الربط بالسيرفر و Google Sign-In Identity
 // ==========================================================
-const SUPABASE_URL = 'https://iexxsjynvczokyvatfxq.supabase.co'; 
+const SUPABASE_URL = 'https://jjricvhhkgvqbkgbnwtp.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Uvs4hZnBQ2gn-zKjids5LQ_urKwYwBW'; 
 /// الـ Client ID الجديد والثابت بتاعك
 const GOOGLE_CLIENT_ID = '715210407785-3brf62jg5rsd30fegc4ocugieln0vpqk.apps.googleusercontent.com';

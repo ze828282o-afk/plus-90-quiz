@@ -4,7 +4,7 @@
 const SUPABASE_URL = 'https://jjricvhhkgvqbkgbnwtp.supabase.co'; 
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impqcmljdmhoa2d2cWJrZ2Jud3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTcyNjcsImV4cCI6MjA5NTQ3MzI2N30.W-lSd89t6LHnlpUBhlM8Lkm80Rycq6THgWBUkdLBfcY'; 
 // الـ Client ID الجديد والثابت بتاعك
-const GOOGLE_CLIENT_ID = '989832657643-phqgqpbbpdtspu095701rmbmbbldahoi.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '715210407785-3brf62jg5rsd30fegc4ocugieln0vpqk.apps.googleusercontent.com';
 
 let supabaseClient = null;
 let currentUser = null;

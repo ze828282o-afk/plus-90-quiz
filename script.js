@@ -1,10 +1,10 @@
 // ==========================================================
 // 1. إعدادات الربط بالسيرفر و Google Sign-In Identity
 // ==========================================================
-const SUPABASE_URL = 'https://iexxsjynvczokyvatfxq.supabase.co/auth/v1/callback';
-const SUPABASE_KEY = 'sb_publishable_Uvs4hZnBQ2gn-zKjids5LQ_urKwYwBW'; 
-/// الـ Client ID الجديد والثابت بتاعك
-const GOOGLE_CLIENT_ID = '715210407785-3brf62jg5rsd30fegc4ocugieln0vpqk.apps.googleusercontent.com';
+const SUPABASE_URL = 'https://jjricvhhkgvqbkgbnwtp.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impqcmljdmhoa2d2cWJrZ2Jud3RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTcyNjcsImV4cCI6MjA5NTQ3MzI2N30.W-lSd89t6LHnlpUBhlM8Lkm80Rycq6THgWBUkdLBfcY'; 
+// الـ Client ID الجديد والثابت بتاعك
+const GOOGLE_CLIENT_ID = '989832657643-phqgqpbbpdtspu095701rmbmbbldahoi.apps.googleusercontent.com';
 
 let supabaseClient = null;
 let currentUser = null;
@@ -14,18 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
         if (typeof supabase !== 'undefined' && supabase !== null) {
             supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-            
-            // تكتيك ذكي: مراقبة حالة اللاعب بشكل مستمر وتلقائي أول ما الصفحة تفتح
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (session && session.user) {
-                    currentUser = session.user;
-                    updateUserUI(currentUser);
-                    loadUserProgress();
-                } else {
-                    currentUser = null;
-                    updateUserUI(null);
-                }
-            });
         }
     } catch (e) {
         console.log("السيرفر لم يتصل، اللعبة تعمل محلياً كزائر.");
@@ -41,8 +29,7 @@ function initializeGoogleAuth() {
     if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
         google.accounts.id.initialize({
             client_id: GOOGLE_CLIENT_ID,
-            callback: handleCredentialResponse,
-            auto_select: false // يترك للاعب حرية اختيار الحساب بنزاهة
+            callback: handleCredentialResponse
         });
         google.accounts.id.renderButton(
             document.getElementById("buttonDiv"),
@@ -54,27 +41,20 @@ function initializeGoogleAuth() {
     }
 }
 
-// الكال باك الأسطوري بعد التعديل لربط السيرفر مباشرة
 async function handleCredentialResponse(response) {
     try {
-        if (!supabaseClient) return;
-        
-        // إرسال التوكن مباشرة لـ Supabase عشان يسجل اليوزر في السيرفر
         const { data, error } = await supabaseClient.auth.signInWithIdToken({
             provider: 'google',
             token: response.credential,
         });
-        
         if (error) throw error;
-        
         if (data?.user) {
             currentUser = data.user;
             updateUserUI(currentUser);
             loadUserProgress();
-            alert(`مرحباً بك يا بطل: ${currentUser.user_metadata?.full_name || 'لاعب زائر'}`);
         }
     } catch (err) {
-        console.error("فشل تسجيل الدخول بجوجل في السيرفر:", err.message);
+        console.error("فشل تسجيل الدخول بجوجل:", err.message);
     }
 }
 
@@ -94,12 +74,6 @@ function updateUserUI(user) {
 
         if (userProfileName) userProfileName.innerText = user.user_metadata?.full_name || user.email;
         if (userAvatarImg) userAvatarImg.src = user.user_metadata?.avatar_url || 'favicon.png';
-    } else {
-        // إذا لم يكن هناك مستخدم، أظهر أزرار تسجيل الدخول وافرغ البيانات
-        if (guestModeMsg) guestModeMsg.style.display = "block";
-        if (googleLoginContainer) googleLoginContainer.style.display = "block";
-        if (userProfileInfo) userProfileInfo.classList.add("hidden");
-        if (logoutBtn) logoutBtn.classList.add("hidden");
     }
 }
 
@@ -119,7 +93,7 @@ const questionsDatabase = [
   { id: 2, text: "ما هو النادي الأكثر تتويجًا بالدوري الإنجليزي الممتاز？", options: ["ليفربول", "مانشستر يونايتد", "أرسنال", "مانشستر سيتي"], correct: 1, minLevel: 0 },
   { id: 3, text: "من سجل هدف 'يد الله' الشهير في كأس العالم 1986؟", options: ["بيليه", "مارادونا", "زين الدين زيدان", "جيف هيرست"], correct: 1, minLevel: 0 },
   { id: 4, text: "أي نادٍ إيطالي يُعجبه ويلقب باسم 'البيانكونيري'？", options: ["إنتر ميلان", "يوفنتوس", "ميلان", "روما"], correct: 1, minLevel: 0 },
-  { id: 5, text: "من فاز بجائزة أفضل لاعب في العالم (ذا بيست) لعام 2023？", options: ["كيليان مبابي", "إيرلينغ هالاند", "ليونيل ميسي", "فينيسيوس جونيور"], correct: 2, minLevel: 0 },
+  { id: 5, text: "من فاز بجائزة أفضل لاعب في العالم (ذا بيست) لعام 2023؟", options: ["كيليان مبابي", "إيرلينغ هالاند", "ليونيل ميسي", "فينيسيوس جونيور"], correct: 2, minLevel: 0 },
   { id: 6, text: "كم عدد أندية الدوري الإنجليزي الممتاز (البريميرليغ) في الموسم الواحد؟", options: ["18", "20", "22", "24"], correct: 1, minLevel: 0 },
   { id: 7, text: "من هو الهداف التاريخي لبطولات كأس العالم؟", options: ["رونالدو (البرازيلي)", "ميروسلاف كلوزه", "غيرد مولر", "جاست فونتين"], correct: 1, minLevel: 0 },
   { id: 8, text: "أين أقيمت بطولة كأس العالم لكرة القدم لعام 2022؟", options: ["قطر", "روسيا", "البرازيل", "جنوب أفريقيا"], correct: 0, minLevel: 0 },
@@ -133,7 +107,7 @@ const questionsDatabase = [
   { id: 16, text: "ما هو النادي الفرنسي الأكثر تتويجاً بلقب الدوري المحلي؟", options: ["باريس سان جيرمان", "مارسيليا", "ليون", "سانت إتيان"], correct: 0, minLevel: 0 },
   { id: 17, text: "كم عدد الكرات الذهبية (Ballon d'Or) التي حققها كريستيانو رونالدو؟", options: ["3", "4", "5", "6"], correct: 2, minLevel: 0 },
   { id: 18, text: "أي لاعب برازيلي شهير يلقب بـ 'الظاهرة'؟", options: ["رونالدينيو", "كريستيانو رونالدو", "رونالدو نازاريو", "روماريو"], correct: 2, minLevel: 0 },
-  { id: 19, text: "ما هي الدولة الأكثر فوزاً ببطولة كأس العالم على مر التاريخ؟", options: ["ألمانيـا", "إيطاليا", "الأرجنتين", "البرازيل"], correct: 3, minLevel: 0 },
+  { id: 19, text: "ما هي الدولة الأكثر فوزاً ببطولة كأس العالم على مر التاريخ؟", options: ["ألمانيا", "إيطاليا", "الأرجنتين", "البرازيل"], correct: 3, minLevel: 0 },
   { id: 20, text: "في أي نادٍ إنجليزي بدأ كريستيانو رونالدو مسيرته في البريميرليغ؟", options: ["أرسنال", "تشيلسي", "مانشستر يونايتد", "ليفربول"], correct: 2, minLevel: 0 },
   { id: 21, text: "من هو هداف الدوري الإنجليزي الممتاز التاريخي (البريميرليغ)؟", options: ["هاري كين", "ألان شيرر", "واين روني", "تييري هنري"], correct: 1, minLevel: 0 },
   { id: 22, text: "ما هو اللقب الشهير لنادي تشيلسي الإنجليزي؟", options: ["البلوز", "الريدز", "السبيرز", "التوفيز"], correct: 0, minLevel: 0 },
@@ -141,9 +115,9 @@ const questionsDatabase = [
   { id: 24, text: "ملعب 'الكامب نو' هو المعقل التاريخي لأي نادٍ أوروبي؟", options: ["ريال مدريد", "أتلتيكو مدريد", "برشلونة", "فالنسيا"], correct: 2, minLevel: 0 },
   { id: 25, text: "من هو المدرب الأسطوري لمانشستر يونايتد الذي قادهم لأكثر من 26 عاماً؟", options: ["أليكس فيرغسون", "أرسين فينجر", "جوزيه مورينيو", "مات بسبي"], correct: 0, minLevel: 0 },
   { id: 26, text: "ما هو النادي المصري الذي يلقب بـ 'الدراويش'؟", options: ["الزمالك", "الإسماعيلي", "الاتحاد السكندري", "المصري"], correct: 1, minLevel: 0 },
-  { id: 27, text: "من هو اللاعب الذي يلقب بـ 'الالبرغوث'؟", options: ["كريستيانو رونالدو", "نيمار داسيلفا", "ليونيل ميسي", "لويس سواريز"], correct: 2, minLevel: 0 },
+  { id: 27, text: "من هو اللاعب الذي يلقب بـ 'البرغوث'؟", options: ["كريستيانو رونالدو", "نيمار داسيلفا", "ليونيل ميسي", "لويس سواريز"], correct: 2, minLevel: 0 },
   { id: 28, text: "أي منتخب فاز بكأس أمم أوروبا (يورو 2020) التي أقيمت في 2021؟", options: ["إنجلترا", "إيطاليا", "إسبانيا", "فرنسا"], correct: 1, minLevel: 0 },
-  { id: 29, text: "ما هو اللون الأساسي لقميص نادي ليفربول على أرضه؟", options: ["الأزرق", "الأبيض", "الأحمر", "الأخضر"], correct: 2, minLevel: 0 },
+  { id: 29, text: "ما هو اللون الأساسي لقميص نادي ليفربول على أرضه？", options: ["الأزرق", "الأبيض", "الأحمر", "الأخضر"], correct: 2, minLevel: 0 },
   { id: 30, text: "من هو شريك النجم محمد صلاح التاريخي في هجوم ليفربول وغادر لبايرن ثم النصر؟", options: ["ساديو ماني", "روبرتو فيرمينو", "لويس دياز", "ديوغو جوتا"], correct: 0, minLevel: 0 },
   { id: 31, text: "كم عدد شوطي المباراة الرسمية في كرة القدم بدون أشواط إضافية؟", options: ["شوط واحد", "شوطين", "3 أشواط", "4 أشواط"], correct: 1, minLevel: 0 },
   { id: 32, text: "أي نادٍ سعودي يلقب بـ 'العالمي' ويلعب له كريستيانو رونالدو؟", options: ["الهلال", "الاتحاد", "النصر", "الأهلي"], correct: 2, minLevel: 0 },
@@ -168,7 +142,7 @@ const questionsDatabase = [
   { id: 49, text: "من المدرب الذي قاد تشيلسي كبديل لتحقيق أول لقب دوري أبطال أوروبا عام 2012؟", options: ["جوزيه مورينيو", "روبرتو دي ماتيو", "توماس توخيل", "كارلو أنشيلوتي"], correct: 1, minLevel: 20 },
   { id: 50, text: "من هو اللاعب العربي الأكثر تسجيلاً للأهداف في تاريخ دوري أبطال أوروبا？", options: ["رباح ماجر", "رياض محرز", "محمد صلاح", "حكيم زياش"], correct: 2, minLevel: 20 },
   { id: 51, text: "أي نادٍ إنجليزي هو الوحيد من لندن الذي فاز بدوري الأبطال قبل عام 2020؟", options: ["أرسنال", "توتنهام", "تشيلسي", "وست هام"], correct: 2, minLevel: 20 },
-  { id: 52, text: "من هو أصلغر لاعب يسجل هدفاً في تاريخ بطولات كأس العالم لكرة القدم؟", options: ["بيليه", "كيليان مبابي", "ليونيل ميسي", "مايكل أوين"], correct: 0, minLevel: 20 },
+  { id: 52, text: "من هو أصغر لاعب يسجل هدفاً في تاريخ بطولات كأس العالم لكرة القدم؟", options: ["بيليه", "كيليان مبابي", "ليونيل ميسي", "مايكل أوين"], correct: 0, minLevel: 20 },
   { id: 53, text: "ما هو النادي الاسكتلندي العريق الذي حقق لقب دوري أبطال أوروبا عام 1967؟", options: ["رينجرز", "سلتيك", "أبردين", "هارتس"], correct: 1, minLevel: 20 },
   { id: 54, text: "كم عدد ألقاب منتخب ألمانيا (الماكينات) في بطولة كأس العالم؟", options: ["3", "4", "5", "2"], correct: 1, minLevel: 20 },
   { id: 55, text: "لاعب دولي كبير ومثير للجدل لعب لبرشلونة، ريال مدريد، إنتر ميلان، وميلان؟", options: ["لويس فيغو", "رونالدو نازاريو", "زلاتان إبراهيموفيتش", "أندريا بيرلو"], correct: 1, minLevel: 20 },
@@ -194,7 +168,7 @@ const questionsDatabase = [
   { id: 73, text: "أي لاعب يحمل لقب الهداف التاريخي لمنتخب البرازيل في المباريات الرسمية؟", options: ["بيليه", "رونالدو نازاريو", "نيمار داسيلفا", "روماريو"], correct: 2, minLevel: 45 },
   { id: 74, text: "من هو أكثر لاعب تحقيقاً للألقاب والبطولات الجماعية في تاريخ كرة القدم؟", options: ["ليونيل ميسي", "داني ألفيس", "كريستيانو رونالدو", "أندريس إنييستا"], correct: 0, minLevel: 45 },
   { id: 75, text: "في أي عام حقق المنتخب الدنماركي معجزته وفاز بكأس أمم أوروبا بعد استدعائه من الإجازة؟", options: ["1988", "1992", "1996", "2000"], correct: 1, minLevel: 45 },
-  { id: 76, text: "من هو المدرب الإيطالي الأسطوري الوحيد الذي فاز بلقب الدوري في 4 دول أوروبية مختلفة؟", options: ["فابيو كابيلو", "كارلو أنشيلوتي", "مارتشيلو ليبي", "أنطونيو كونتي"], correct: 1, minLevel: 45 },
+  { id: 76, text: "من هو إلى المدرب الإيطالي الأسطوري الوحيد الذي فاز بلقب الدوري في 4 دول أوروبية مختلفة؟", options: ["فابيو كابيلو", "كارلو أنشيلوتي", "مارتشيلو ليبي", "أنطونيو كونتي"], correct: 1, minLevel: 45 },
   { id: 77, text: "كم عدد الأهداف الإجمالية التي سجلها الأسطورة بيليه في مسيرته بحسب توثيق الفيفا الرسمي؟", options: ["1281", "757", "830", "650"], correct: 1, minLevel: 45 },
   { id: 78, text: "أي لاعب فاز بجائزة هداف كأس العالم 2002 برصيد 8 أهداف؟", options: ["ميروسلاف كلوزه", "رونالدو نازاريو", "ريفالدو", "تييري هنري"], correct: 1, minLevel: 45 },
   { id: 79, text: "من هو هداف الدوري الإيطالي التاريخي (السيري آ)؟", options: ["فرانشيسكو توتي", "سيلفيو بيولا", "جوزيبي مياتزا", "أنتونيو دي ناتالي"], correct: 1, minLevel: 45 },
